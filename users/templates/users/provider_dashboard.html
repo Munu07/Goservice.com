@@ -1,0 +1,311 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GoService - Provider Dashboard</title>
+
+  <!-- Fonts & Libraries -->
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://kit.fontawesome.com/a2d9b0a02c.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+  <style>
+    :root {
+      --orange-1: #ff9900;
+      --orange-2: #ffb84d;
+      --cream-100: #fffaf4;
+      --beige: #f7f1e0;
+      --muted: #666;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #fff;
+      color: #222;
+    }
+
+    /* Header */
+    .navbar-custom {
+      background: linear-gradient(90deg, var(--orange-1), var(--orange-2));
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+      padding: 14px 0;
+    }
+    .navbar-brand.logo-text {
+      font-family: 'Pacifico', cursive;
+      color: #fff;
+      font-size: 1.9rem;
+      text-decoration: none;
+    }
+    .navbar-custom .nav-link {
+      color: #fff !important;
+      font-weight: 500;
+      margin-left: 6px;
+      transition: 0.2s;
+    }
+    .navbar-custom .nav-link:hover {
+      color: #333 !important;
+      transform: scale(1.05);
+    }
+
+    /* Hero Section */
+    .hero {
+      background: var(--cream-100);
+      padding: 60px 6%;
+    }
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 40px;
+      max-width: 1100px;
+      margin: auto;
+    }
+    @media (max-width: 992px) {
+      .hero-inner { grid-template-columns: 1fr; text-align: center; }
+    }
+
+    .hero img {
+      width: 100%;
+      max-width: 480px;
+      border-radius: 15px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      animation: float 5s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .hero-content h1 {
+      font-weight: 700;
+      font-size: 2rem;
+    }
+    .hero-content p {
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .btn-orange {
+      background: var(--orange-1);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 28px;
+      font-weight: 600;
+      border: none;
+      transition: 0.2s;
+      text-decoration: none;
+    }
+    .btn-orange:hover {
+      transform: scale(1.03);
+      box-shadow: 0 6px 20px rgba(255,153,0,0.2);
+    }
+
+    /* Feature Cards */
+    .feature-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin-top: 25px;
+    }
+    .feature-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff;
+      padding: 16px 20px;
+      border-radius: 15px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+      transition: 0.25s;
+    }
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+    }
+    .feature-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .feature-left i {
+      font-size: 30px;
+      color: var(--orange-1);
+      width: 45px;
+      text-align: center;
+    }
+    .feature-meta .title {
+      font-weight: 800;
+      margin: 0;
+      color: black;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+    .feature-meta .desc {
+      color: var(--orange-1);
+      margin: 4px 0 0;
+      font-size: 0.95rem;
+    }
+    .feature-cta a {
+      text-decoration: none;
+      color: var(--orange-1);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .feature-cta a:hover {
+      text-decoration: underline;
+    }
+
+    /* Footer */
+    footer.footer {
+      background: var(--beige);
+      color: #333;
+      text-align: center;
+      padding: 22px 0;
+      margin-top: 30px;
+    }
+    footer.footer i {
+      color: var(--orange-1);
+      margin-right: 6px;
+    }
+    .social-icons a {
+      color: var(--orange-1);
+      margin: 0 10px;
+      font-size: 1.2rem;
+      transition: 0.3s;
+    }
+    .social-icons a:hover {
+      color: #333;
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container">
+      <a class="navbar-brand logo-text" href="{% url 'provider_dashboard' %}">GoService</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMain">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="{% url 'provider_dashboard' %}">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'list_service' %}">List</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'provider_profile' %}">Profile</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'provider_view_bookings' %}">Bookings</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'provider_service_history' %}">Service History</a></li>
+          <li class="nav-item"><span class="nav-link earnings-badge">₹{{ total_earnings }}</span></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN SECTION -->
+  <section class="hero">
+    <div class="hero-inner">
+      <!-- LEFT -->
+      <div data-aos="fade-right">
+        <img src="{% static 'main/pexels.png' %}" alt="Dashboard Image">
+      </div>
+
+      <!-- RIGHT -->
+      <div class="hero-content" data-aos="fade-left">
+        <h1>Welcome, {{ provider.user.username }}</h1>
+        <p>Manage your services, bookings, and earnings — all in one dashboard.</p>
+
+        <div class="feature-stack">
+          <!-- My Services -->
+          <div class="feature-card">
+            <div class="feature-left">
+              <i class="fas fa-briefcase"></i>
+              <div class="feature-meta">
+                <p class="title">My Services</p>
+                <p class="desc">View and manage your listed services.</p>
+              </div>
+            </div>
+            <div class="feature-cta">
+              <a href="{% url 'list_service' %}">Manage <i class="fas fa-arrow-right"></i></a>
+            </div>
+          </div>
+
+          <!-- Bookings -->
+          <div class="feature-card">
+            <div class="feature-left">
+              <i class="fas fa-calendar-check"></i>
+              <div class="feature-meta">
+                <p class="title">Bookings</p>
+                <p class="desc">Track and handle all your bookings.</p>
+              </div>
+            </div>
+            <div class="feature-cta">
+              <a href="{% url 'provider_view_bookings' %}">View <i class="fas fa-arrow-right"></i></a>
+            </div>
+          </div>
+
+          <!-- Earnings -->
+          <div class="feature-card">
+            <div class="feature-left">
+              <i class="fas fa-wallet"></i>
+              <div class="feature-meta">
+                <p class="title">Earnings</p>
+                <p class="desc">Monitor your payments and earnings.</p>
+              </div>
+            </div>
+            <div class="feature-cta">
+              <a href="{% url 'provider_earnings' %}">Check <i class="fas fa-arrow-right"></i></a>
+            </div>
+          </div>
+
+          <!-- Service History -->
+          <div class="feature-card">
+            <div class="feature-left">
+              <i class="fas fa-history"></i>
+              <div class="feature-meta">
+                <p class="title">Service History</p>
+                <p class="desc">View your completed services and history.</p>
+              </div>
+            </div>
+            <div class="feature-cta">
+              <a href="{% url 'provider_service_history' %}">View <i class="fas fa-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Robot Animation -->
+        <div style="margin-top:20px;">
+          <lottie-player src="https://assets9.lottiefiles.com/packages/lf20_pprxh53t.json" background="transparent" speed="1" style="width:140px; height:140px;" loop autoplay></lottie-player>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+        <div class="contact-info mb-2">
+            <i class="fas fa-envelope"></i> info@goservice.com &nbsp; | &nbsp;
+            <i class="fas fa-phone"></i> +91 9876543210 &nbsp; | &nbsp;
+            <i class="fas fa-map-marker-alt"></i> Bengaluru, India
+        </div>
+        <div class="social-icons mb-2">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+        &copy; 2025 GoService - BY Muni_Raj.
+    </div>
+  </footer>
+
+  <!-- JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>AOS.init({ duration: 900, once: true });</script>
+</body>
+</html>

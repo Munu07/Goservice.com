@@ -1,0 +1,315 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GoService — Login</title>
+
+  <!-- Bootstrap + Font -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --orange-700: #cc5a00;
+      --orange-600: #ff7a00;
+      --orange-500: #ff8a1a;
+      --orange-400: #ff9f40;
+      --muted:#cfcfcf;
+      --bg-dark: #1c1a18;
+      --bg-grad1: #1c0e00;
+      --bg-grad2: #362109;
+      --accent: #ff7a00;
+    }
+
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: "Inter", sans-serif;
+      background: radial-gradient(circle at top right, var(--bg-grad2), var(--bg-grad1));
+      color:#fff;
+      overflow-x:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .panel {
+      width: 1100px;
+      max-width: calc(100% - 40px);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:48px;
+    }
+
+    /* Left animation area */
+    .robot-area{
+      width: 420px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+    }
+
+    .system-core-wrap {
+      width: 400px;
+      height: 400px;
+      position: relative;
+      animation: floaty 6s ease-in-out infinite;
+    }
+
+    @keyframes floaty {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .system-aura {
+      position: absolute;
+      width: 360px;
+      height: 360px;
+      border-radius: 50%;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(ellipse at center, rgba(255,110,0,0.55), rgba(255,90,0,0.15) 40%, transparent 70%);
+      filter: blur(40px);
+      z-index: 1;
+      animation: auraPulse 3s ease-in-out infinite alternate;
+    }
+    @keyframes auraPulse {
+      0% { transform: translate(-50%, -50%) scale(1); opacity:0.8; }
+      100% { transform: translate(-50%, -50%) scale(1.18); opacity:1; }
+    }
+
+    .sparks {
+      position:absolute;
+      inset: 0;
+      z-index:3;
+      pointer-events:none;
+    }
+    .spark {
+      position:absolute;
+      width:6px; height:6px;
+      border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, #fff, var(--orange-500));
+      opacity:0;
+      animation: sparkUp 2.2s linear infinite;
+      filter: drop-shadow(0 0 6px rgba(255,150,60,0.9));
+    }
+    @keyframes sparkUp {
+      0% { transform: translateY(10px) scale(0.6); opacity:0; }
+      10% { opacity:1; }
+      50% { transform: translateY(-40px) scale(1); opacity:1; }
+      90% { opacity:0.2; }
+      100% { transform: translateY(-70px) scale(0.6); opacity:0; }
+    }
+
+    /* Glass card (same UI but darkened background) */
+    .glass-card {
+      flex:1;
+      max-width:520px;
+      background: rgba(35, 30, 20, 0.65);
+      backdrop-filter: blur(12px);
+      border-radius:18px;
+      box-shadow: 0 8px 30px rgba(255, 122, 0, 0.2);
+      padding:30px;
+      color:#fff;
+      border:1px solid rgba(255,122,0,0.15);
+    }
+
+    .card-title {
+      font-size:1.5rem;
+      font-weight:700;
+      color:#fff;
+    }
+
+    .card-sub {
+      font-size:0.9rem;
+      color:var(--muted);
+      margin-bottom:20px;
+    }
+
+    .form-control {
+      border-radius: 12px;
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+    }
+
+    .form-control:focus {
+      border-color: var(--orange-600);
+      box-shadow: 0 0 0 0.2rem rgba(255,153,0,0.2);
+    }
+
+    .btn-orange {
+      background: linear-gradient(90deg,var(--orange-700),var(--orange-400));
+      border:none;
+      padding:12px;
+      border-radius:12px;
+      color:white;
+      font-weight:700;
+      width:100%;
+      transition:all 0.2s ease;
+    }
+
+    .btn-orange:hover {
+      transform:translateY(-3px);
+      box-shadow:0 0 25px rgba(255,122,0,0.4);
+    }
+
+    .help-line {
+      font-size:0.9rem;
+      color:var(--muted);
+      text-align:center;
+      margin-top:15px;
+    }
+
+    .help-line a {
+      color:var(--orange-500);
+      text-decoration:none;
+      font-weight:600;
+    }
+
+    @media(max-width:980px) {
+      .panel { flex-direction:column; }
+      .system-core-wrap { width:280px; height:280px; }
+    }
+
+    .scanline {
+      position:absolute;
+      left:0; right:0;
+      top:0; bottom:0;
+      background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 100% 14px;
+      pointer-events:none;
+      mix-blend-mode: overlay;
+      z-index:4;
+      opacity:0.4;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="panel">
+    <!-- LEFT: Futuristic Animation -->
+    <div class="robot-area">
+      <div class="system-aura"></div>
+
+      <div class="system-core-wrap">
+        <svg viewBox="0 0 400 400" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="coreGrad" cx="50%" cy="45%" r="50%">
+              <stop offset="0%" stop-color="#fff2cc"/>
+              <stop offset="40%" stop-color="#ff9a1a"/>
+              <stop offset="100%" stop-color="#ff6600" stop-opacity="0.4"/>
+            </radialGradient>
+
+            <linearGradient id="ringGrad" x1="0%" x2="100%">
+              <stop offset="0%" stop-color="#ffdf9a"/>
+              <stop offset="50%" stop-color="#ffb347"/>
+              <stop offset="100%" stop-color="#ff6600"/>
+            </linearGradient>
+
+            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="5" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+
+          <g transform="translate(200,200)">
+            <g id="rings" filter="url(#glow)">
+              <ellipse rx="150" ry="52" fill="none" stroke="url(#ringGrad)" stroke-width="3" opacity="0.9" class="ring ring-outer"/>
+              <ellipse rx="105" ry="36" fill="none" stroke="#ffb86c" stroke-width="2.6" opacity="0.85" class="ring ring-mid"/>
+              <ellipse rx="65" ry="22" fill="none" stroke="#ffad33" stroke-width="2" opacity="0.9" class="ring ring-inner"/>
+            </g>
+
+            <g id="segments" opacity="0.95">
+              <path id="seg1" d="M -130 0 A 130 130 0 0 1 -20 -65" stroke="#fff" stroke-width="2.4" stroke-linecap="round" fill="none" opacity="0.9" />
+              <path id="seg2" d="M 130 0 A 130 130 0 0 1 20 65" stroke="#ffcc80" stroke-width="2.4" stroke-linecap="round" fill="none" opacity="0.7"/>
+            </g>
+
+            <g id="core">
+              <circle cx="0" cy="0" r="36" fill="url(#coreGrad)" />
+              <circle class="halo" cx="0" cy="0" r="56" fill="none" stroke="#ffb347" stroke-width="2" opacity="0.5"/>
+              <circle class="halo2" cx="0" cy="0" r="86" fill="none" stroke="#ff9933" stroke-width="1.3" opacity="0.25"/>
+            </g>
+          </g>
+        </svg>
+
+        <div class="sparks">
+          <div class="spark" style="left: 46%; top: 68%; animation-delay: 0s;"></div>
+          <div class="spark" style="left: 62%; top: 55%; animation-delay: 0.4s;"></div>
+          <div class="spark" style="left: 36%; top: 42%; animation-delay: 0.9s;"></div>
+          <div class="spark" style="left: 72%; top: 76%; animation-delay: 1.6s;"></div>
+          <div class="spark" style="left: 28%; top: 60%; animation-delay: 2.2s;"></div>
+        </div>
+
+        <div class="scanline"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Login Card -->
+    <div class="glass-card">
+      <h2 class="card-title">Welcome back</h2>
+      <div class="card-sub">Sign in to continue to <strong>GoService</strong></div>
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-warning">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+
+        <div class="mb-3">
+          <input type="text" name="username" class="form-control" placeholder="Username" required autocomplete="username">
+        </div>
+        <div class="mb-3">
+          <input type="password" name="password" class="form-control" placeholder="Password" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn-orange">Log in</button>
+
+        <div class="help-line">
+          Don’t have an account? <a href="{% url 'signup_customer' %}">Sign up</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const ringOuter=document.querySelector('.ring-outer');
+      const ringMid=document.querySelector('.ring-mid');
+      const ringInner=document.querySelector('.ring-inner');
+      const seg1=document.getElementById('seg1');
+      const seg2=document.getElementById('seg2');
+      const halo=document.querySelector('.halo');
+      const halo2=document.querySelector('.halo2');
+
+      let t=0;
+      function animate(){
+        t+=0.009;
+        const rotOuter=(t*28)%360;
+        const rotMid=(t*-45)%360;
+        const rotInner=(t*68)%360;
+        ringOuter.style.transform=`rotate(${rotOuter}deg)`;
+        ringMid.style.transform=`rotate(${rotMid}deg)`;
+        ringInner.style.transform=`rotate(${rotInner}deg)`;
+        seg1.style.opacity=0.6+0.4*Math.sin(t*3);
+        seg2.style.opacity=0.5+0.45*Math.cos(t*2.6);
+        const haloScale=1+0.06*Math.sin(t*2.2);
+        halo.setAttribute('transform',`scale(${haloScale})`);
+        halo2.setAttribute('transform',`scale(${1+0.03*Math.cos(t*1.6)})`);
+        requestAnimationFrame(animate);
+      }
+      requestAnimationFrame(animate);
+    })();
+  </script>
+</body>
+</html>

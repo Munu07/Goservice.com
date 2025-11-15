@@ -1,0 +1,297 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GoService - Join & Why Us</title>
+
+  <!-- Google Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a2d9b0a02c.js" crossorigin="anonymous"></script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #fff;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .why-section {
+      flex: 1;
+    }
+    .footer {
+      margin-top: auto;
+    }
+
+    /* Header (Navbar) */
+    .navbar-custom {
+      background: linear-gradient(90deg, #ff9900, #ffb84d);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+    .navbar-custom .nav-link {
+      color: white !important;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+    .navbar-custom .nav-link:hover {
+      color: #333 !important;
+      transform: scale(1.05);
+    }
+    .navbar-brand.logo-text {
+      font-family: 'Pacifico', cursive;
+      color: white !important;
+      font-size: 1.9rem;
+      letter-spacing: 1px;
+    }
+
+    /* Join Section */
+    .join-section {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      padding: 80px 8%;
+      background-color: #fffaf4;
+    }
+    .join-text {
+      flex: 1;
+      min-width: 300px;
+      padding: 20px;
+    }
+    .join-text h2 {
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .join-text p {
+      color: #666;
+      margin-bottom: 25px;
+      line-height: 1.6;
+    }
+    .join-btn {
+      background-color: #ff9900;
+      color: #fff;
+      padding: 12px 25px;
+      border-radius: 30px;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+    .join-btn:hover {
+      background-color: #e68a00;
+      transform: scale(1.05);
+    }
+
+    .join-image {
+      flex: 1;
+      text-align: center;
+      min-width: 300px;
+    }
+    .join-image img {
+      width: 80%;
+      border-radius: 10px;
+      animation: float 4s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* Why GoService Section */
+    .why-section {
+      background: #ffffff;
+      text-align: center;
+      padding: 80px 5%;
+    }
+    .why-section h2 {
+      color: #ff9900;
+      font-weight: 700;
+      margin-bottom: 50px;
+      position: relative;
+    }
+    .why-section h2::after {
+      content: "";
+      position: absolute;
+      width: 100px;
+      height: 4px;
+      background: #ff9900;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: -10px;
+      border-radius: 5px;
+    }
+    .why-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+    }
+    .why-card {
+      flex: 1 1 220px;
+      background: #fffaf4;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      padding: 30px 20px;
+      transition: all 0.3s ease;
+    }
+    .why-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    .why-card i {
+      font-size: 2.2rem;
+      color: #ff9900;
+      margin-bottom: 15px;
+    }
+    .why-card h5 {
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #333;
+    }
+    .why-card p {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    /* Robot Animation */
+    .robot-container {
+      width: 220px;
+      margin: 40px auto 0;
+    }
+
+    /* Footer */
+    .footer {
+      background-color: #f7f1e0;
+      color: #333;
+      padding: 25px 0;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      .join-section {
+        flex-direction: column-reverse;
+        text-align: center;
+      }
+      .join-image img {
+        width: 95%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Header -->
+<nav class="navbar navbar-expand-lg navbar-custom">
+  <div class="container">
+    <a class="navbar-brand logo-text" href="{% url 'customer_dashboard' %}">GoService</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" href="{% url 'customer_dashboard' %}">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'customer_services' %}">Our Services</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'customer_bookings' %}">My Bookings</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'customer_profile' %}">Profile</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Join Section -->
+<section class="join-section" data-aos="fade-up">
+  <div class="join-text" data-aos="fade-right">
+    <h2>Are You a Service Expert?</h2>
+    <p>Join GoService’s growing community of skilled professionals.  
+       Work on your own terms, earn more, and connect with thousands of happy customers near you.</p>
+    <a href="{% url 'customer_services' %}" class="join-btn">Our-Services</a>
+
+    <div class="mt-4">
+      <p><i class="fas fa-coins text-warning"></i> Earn more with flexible work opportunities.</p>
+      <p><i class="fas fa-chart-line text-warning"></i> Boost your productivity and visibility.</p>
+      <p><i class="fas fa-users text-warning"></i> Join a wide customer base across the city.</p>
+    </div>
+  </div>
+
+  <div class="join-image" data-aos="fade-left">
+    <img src="https://images.pexels.com/photos/585419/pexels-photo-585419.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Construction Worker">
+
+  </div>
+</section>
+
+<!-- Why GoService Section -->
+<section class="why-section" id="why" data-aos="fade-up">
+  <h2>Why GoService?</h2>
+
+  <div class="why-grid">
+    <div class="why-card" data-aos="zoom-in" data-aos-delay="100">
+      <i class="fa-solid fa-calendar-check"></i>
+      <h5>On Demand / Scheduled</h5>
+      <p>Book instantly or schedule services whenever you need them.</p>
+    </div>
+    <div class="why-card" data-aos="zoom-in" data-aos-delay="200">
+      <i class="fa-solid fa-user-shield"></i>
+      <h5>Verified Partners</h5>
+      <p>All professionals are verified and trusted by thousands of customers.</p>
+    </div>
+    <div class="why-card" data-aos="zoom-in" data-aos-delay="300">
+      <i class="fa-solid fa-shield-heart"></i>
+      <h5>Service Warranty</h5>
+      <p>Enjoy a service warranty with every booking for peace of mind.</p>
+    </div>
+    <div class="why-card" data-aos="zoom-in" data-aos-delay="400">
+      <i class="fa-solid fa-tags"></i>
+      <h5>Transparent Pricing</h5>
+      <p>No hidden costs — clear pricing before you confirm.</p>
+    </div>
+    <div class="why-card" data-aos="zoom-in" data-aos-delay="500">
+      <i class="fa-solid fa-credit-card"></i>
+      <h5>Online Payments</h5>
+      <p>Secure and convenient payments through trusted gateways.</p>
+    </div>
+    <div class="why-card" data-aos="zoom-in" data-aos-delay="600">
+      <i class="fa-solid fa-headset"></i>
+      <h5>24/7 Support</h5>
+      <p>Our support team is always ready to assist you anytime.</p>
+    </div>
+  </div>
+
+  <!-- Cute Robot Animation -->
+  <div class="robot-container" data-aos="fade-up" data-aos-delay="700">
+    <lottie-player src="https://assets9.lottiefiles.com/packages/lf20_pprxh53t.json" background="transparent" speed="1" loop autoplay></lottie-player>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="contact-info mb-2">
+            <i class="fas fa-envelope"></i> info@goservice.com &nbsp; | &nbsp;
+            <i class="fas fa-phone"></i> +91 9876543210 &nbsp; | &nbsp;
+            <i class="fas fa-map-marker-alt"></i> Bengaluru, India
+        </div>
+        <div class="social-icons mb-2">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+        &copy; 2025 GoService - BY Muni_Raj.
+    </div>
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  AOS.init({ duration: 1000, once: true });
+</script>
+
+</body>
+</html>

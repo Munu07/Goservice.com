@@ -1,0 +1,529 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GoService - Home Services</title>
+
+  <!-- Bootstrap + Font Awesome + Fonts -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --orange-600: #ff7a00;
+      --orange-500: #ff8a1a;
+      --muted:#6b6b6b;
+    }
+
+    html,body{height:100%;margin:0;font-family:'Roboto',sans-serif;background:linear-gradient(120deg,#fff8f0 0%, #fff7f0 100%);}
+
+    /* NAV */
+    .navbar { background-color: var(--orange-600); }
+    .logo-text{ font-family:'Pacifico',cursive; color:white !important; font-size:1.8rem; }
+    .nav-link{ color:white !important; font-weight:700; }
+
+    /* HERO */
+    .hero-section{ position:relative; height:86vh; overflow:visible; }
+    .hero-inner {
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:4rem;
+      padding:3rem 6%;
+    }
+    .hero-text {
+      max-width: 540px;
+      color:#222;
+      font-size: clamp(1.6rem, 2.6vw, 2.5rem);
+      font-weight:800;
+      line-height:1.05;
+      text-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    }
+    .hero-sub {
+      margin-top:14px;
+      color: #444;
+      font-size:1.05rem;
+      font-weight:500;
+      line-height:1.6;
+    }
+    .hero-ctas { margin-top:20px; display:flex; gap:12px; flex-wrap:wrap; }
+
+    .btn-primary-ghost {
+      background: transparent;
+      border: 2px solid var(--orange-600);
+      color: var(--orange-600);
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-weight:700;
+    }
+    .btn-primary {
+      background: linear-gradient(90deg,var(--orange-600), #ff9b3a);
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-weight:700;
+      box-shadow: 0 10px 30px rgba(255,122,0,0.12);
+    }
+
+    /* Worker SVG container */
+    .worker-wrap {
+      width: 520px;
+      max-width: 48%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      pointer-events: none; /* svg not block clicks */
+    }
+
+    /* worker scale / responsive */
+    @media (max-width: 1100px) {
+      .hero-inner { gap:2rem; padding:2rem; flex-direction:column-reverse; text-align:center; }
+      .worker-wrap { max-width: 85%; width: 85%; }
+      .hero-text { max-width: 100%; }
+    }
+
+    /* SVG micro-animation classes toggled by JS */
+    .tool-glow { filter: drop-shadow(0 8px 24px rgba(255,160,60,0.25)); }
+    .wave-hand-anim { animation: handWave 0.9s ease-in-out 1; transform-origin: 100% 100%; }
+    @keyframes handWave {
+      0% { transform: rotate(0deg); }
+      20% { transform: rotate(-18deg); }
+      50% { transform: rotate(16deg); }
+      80% { transform: rotate(-10deg); }
+      100% { transform: rotate(0deg); }
+    }
+
+    /* subtle idle breathing for torso */
+    .idle-breath { animation: breathing 4s ease-in-out infinite; transform-origin:center; }
+    @keyframes breathing {
+      0% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-6px) scale(1.008); }
+      100% { transform: translateY(0) scale(1); }
+    }
+    /* Animated orange buttons */
+.btn-orange {
+  background: linear-gradient(90deg, #ff9900, #ffb84d);
+  color: white;
+  padding: 12px 28px;
+  border-radius: 30px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.4s ease;
+  box-shadow: 0 4px 10px rgba(255, 153, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle wave shine animation */
+.btn-orange::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: skewX(-25deg);
+}
+
+/* On hover – shine sweep + scale up */
+.btn-orange:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 18px rgba(255, 153, 0, 0.5);
+}
+
+.btn-orange:hover::before {
+  animation: shine 0.8s forwards;
+}
+
+@keyframes shine {
+  100% { left: 125%; }
+}
+
+/* Entry animation (slide-up) */
+.hero-btns {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+  animation: slideUp 1.5s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+    /* footer and content sections kept as before */
+    .about-section { background-color: #fff; padding: 60px 20px; display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:40px; }
+    .about-text { max-width:600px; color:#444; font-size:1.05rem; line-height:1.6; text-align:left; }
+    .about-text h2 { color: var(--orange-500); font-weight:800; margin-bottom:12px; }
+    .about-img { width:320px; border-radius:10px; transition: transform .3s ease, box-shadow .3s ease; }
+    .about-img:hover { transform: scale(1.03); box-shadow: 0 14px 40px rgba(0,0,0,0.08); }
+
+    /* services and footer basic styling (keep your old look) */
+    .services-section { padding:60px 20px; background-color: #fff8f0; }
+    .service-card { background: #fff3e6; border-radius:10px; padding:15px; text-align:center; transition: transform .3s ease, box-shadow .3s ease; }
+    .service-card:hover { transform: translateY(-6px); box-shadow: 0 14px 40px rgba(0,0,0,0.08); }
+    .service-img { width:100%; height:200px; object-fit:cover; border-radius:10px; margin-bottom:10px; }
+    .service-card h5 { color: var(--orange-500); font-weight:700; margin-top:8px; }
+
+    footer.footer { margin-top:40px; background:#222; color:white; padding:34px 0; }
+    footer.footer a { color:white; text-decoration:none; }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand logo-text" href="{% url 'home' %}">GoService</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon" style="color:white;"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#about">About Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO with animated worker SVG -->
+  <section class="hero-section">
+    <div class="hero-inner container">
+      <!-- Text column -->
+      <div>
+        <div class="hero-text">
+          Reliable Home Services at Your Doorstep
+        </div>
+        <div class="hero-sub">
+          GoService connects you with trusted professionals to handle everything from repairs to renovation. Fast booking, trusted pros, and quality guaranteed.
+        </div>
+
+        <div class="hero-ctas">
+          <a href="#services" class="btn btn-primary">Explore Services</a>
+         
+       
+  <a href="{% url 'signup_customer' %}" class="btn btn-orange">Sign Up as Customer</a>
+  <a href="{% url 'signup_provider' %}" class="btn btn-orange">Sign Up as Service Provider</a>
+
+
+        </div>
+      </div>
+
+      <!-- Animated worker vector (SVG) -->
+      <div class="worker-wrap" id="workerWrap" aria-hidden="true">
+        <!-- SVG: cartoon worker full-body -->
+        <svg id="workerSVG" viewBox="0 0 520 520" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+          <!-- defs for gradients/shadows -->
+          <defs>
+            <linearGradient id="vestGrad" x1="0" x2="1">
+              <stop offset="0" stop-color="#ffd9a6"/>
+              <stop offset="1" stop-color="#ffb370"/>
+            </linearGradient>
+            <linearGradient id="pantsGrad" x1="0" x2="1">
+              <stop offset="0" stop-color="#4da6ff"/>
+              <stop offset="1" stop-color="#1f8fff"/>
+            </linearGradient>
+            <linearGradient id="toolGrad" x1="0" x2="1">
+              <stop offset="0" stop-color="#ffd48a"/>
+              <stop offset="1" stop-color="#ff9b3a"/>
+            </linearGradient>
+          </defs>
+
+          <!-- drop shadow ground -->
+          <ellipse cx="260" cy="470" rx="150" ry="28" fill="rgba(0,0,0,0.08)"/>
+
+          <!-- legs -->
+          <g id="legs" transform="translate(0,0)">
+            <rect x="195" y="320" width="50" height="110" rx="14" fill="url(#pantsGrad)"/>
+            <rect x="275" y="320" width="50" height="110" rx="14" fill="url(#pantsGrad)"/>
+            <!-- boots -->
+            <rect x="188" y="420" width="64" height="28" rx="8" fill="#2b2b2b"/>
+            <rect x="268" y="420" width="64" height="28" rx="8" fill="#2b2b2b"/>
+          </g>
+
+          <!-- torso + vest (idle breathing group) -->
+          <g id="torsoGroup" class="idle-breath" transform="translate(0,0)">
+            <rect x="160" y="200" width="200" height="160" rx="28" fill="url(#vestGrad)" stroke="#ff8a1a" stroke-width="2"/>
+            <rect x="200" y="240" width="120" height="70" rx="12" fill="#fff" opacity="0.12"/>
+            <!-- tool belt -->
+            <rect x="150" y="330" width="220" height="22" rx="10" fill="#4b3a2b"/>
+            <circle cx="250" cy="341" r="8" fill="#ffd48a"/>
+          </g>
+
+          <!-- left arm (holding wrench) -->
+          <g id="leftArm" transform="translate(0,0)">
+            <rect x="118" y="220" width="34" height="110" rx="12" fill="#ff9945"/>
+            <!-- elbow joint -->
+            <g id="leftWrist" transform="translate(110,320)">
+              <g id="wrenchGroup" transform="translate(0,0)">
+                <!-- wrench body -->
+                <rect x="0" y="-6" width="110" height="18" rx="8" fill="#bfbfbf" stroke="#8f8f8f" stroke-width="1"/>
+                <!-- wrench head -->
+                <path d="M110 -6 L132 -6 L132 12 L110 12 z" fill="#bfbfbf" stroke="#8f8f8f" stroke-width="1"/>
+                <!-- small sparkle (tool glow) -->
+                <circle id="toolGlow" cx="86" cy="3" r="6" fill="#ffd48a" opacity="0.0"/>
+              </g>
+            </g>
+          </g>
+
+          <!-- right arm (resting/wave) -->
+          <g id="rightArm" transform="translate(0,0)">
+            <rect x="368" y="220" width="34" height="110" rx="12" fill="#ff9945"/>
+            <g id="rightHand" transform="translate(378,310)">
+              <circle cx="0" cy="30" r="14" fill="#ff7a00"/>
+            </g>
+          </g>
+
+          <!-- head group -->
+          <g id="headGroup" transform="translate(0,0)">
+            <rect x="170" y="110" width="180" height="140" rx="36" fill="#ff8a1a" stroke="#ff6600" stroke-width="3"/>
+            <rect x="200" y="140" width="120" height="80" rx="14" fill="#fff" opacity="0.14"/>
+
+            <!-- eyes group (pupils moved by JS) -->
+            <g id="eyes" transform="translate(0,0)">
+              <g id="eyeLeft" transform="translate(230,180)">
+                <ellipse rx="18" ry="14" fill="#fff"/>
+                <circle id="pupilLeft" cx="0" cy="0" r="6" fill="#0b0b0b"/>
+              </g>
+              <g id="eyeRight" transform="translate(300,180)">
+                <ellipse rx="18" ry="14" fill="#fff"/>
+                <circle id="pupilRight" cx="0" cy="0" r="6" fill="#0b0b0b"/>
+              </g>
+            </g>
+
+            <!-- mouth (path) -->
+            <path id="mouth" d="M230 220 q30 18 60 0" stroke="#6b3a00" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+            <!-- antenna -->
+            <g id="antenna" transform="translate(0,0)">
+              <line x1="260" y1="110" x2="260" y2="82" stroke="#ff6600" stroke-width="6" stroke-linecap="round"/>
+              <circle id="antennaTip" cx="260" cy="74" r="10" fill="#ffd1a8" stroke="#ff8a1a" stroke-width="2"/>
+            </g>
+          </g>
+
+          <!-- small accent: clipboard on belt or pouch -->
+          <g id="pouch" transform="translate(0,0)">
+            <rect x="300" y="310" width="36" height="44" rx="8" fill="#ffd6a5" stroke="#ff9b3a"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section (kept layout similar to your previous code) -->
+  <section id="about" class="about-section">
+    <div class="about-text">
+      <h2>About GoService</h2>
+      <p>
+        GoService connects you with trusted professionals to handle your home service needs — 
+        from electricians and plumbers to cleaners and painters. We ensure quick, affordable, 
+        and quality services at your doorstep with just a few clicks.
+      </p>
+    </div>
+    <div>
+      <img src="{% static 'main/exterior1.png' %}" alt="About GoService" class="about-img">
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section id="services" class="services-section">
+    <div class="container text-center">
+      <h2>Our Services</h2>
+      <div class="row justify-content-center g-4">
+        <div class="col-md-3 col-sm-6">
+          <div class="service-card">
+            <img src="{% static 'main/service-4.jpg' %}" alt="Electrician" class="service-img">
+            <h5>Electrician</h5>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="service-card">
+            <img src="{% static 'main/plumber.png' %}" alt="Plumber" class="service-img">
+            <h5>Plumber</h5>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="service-card">
+            <img src="{% static 'main/clean.webp' %}" alt="Cleaner" class="service-img">
+            <h5>Cleaner</h5>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="service-card">
+            <img src="{% static 'main/painter.jpeg' %}" alt="Painter" class="service-img">
+            <h5>Painter</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer (kept as before) -->
+  <footer class="footer">
+    <div class="container text-center">
+      <div class="contact-info mb-2" style="padding-top:18px;">
+        <i class="fas fa-envelope"></i> info@goservice.com &nbsp; | &nbsp;
+        <i class="fas fa-phone"></i> +91 9876543210 &nbsp; | &nbsp;
+        <i class="fas fa-map-marker-alt"></i> Bengaluru, India
+      </div>
+      <div class="social-icons mb-2">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        &nbsp;
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        &nbsp;
+        <a href="#"><i class="fab fa-instagram"></i></a>
+      </div>
+      <div style="padding-bottom:18px;">
+        &copy; 2025 <strong>GoService</strong> — By <strong>Muni_Raj</strong>.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Worker animation script -->
+  <script>
+    (function(){
+      // Elements
+      const workerWrap = document.getElementById('workerWrap');
+      const svg = document.getElementById('workerSVG');
+      const pupilLeft = svg.querySelector('#pupilLeft');
+      const pupilRight = svg.querySelector('#pupilRight');
+      const antennaTip = svg.querySelector('#antennaTip');
+      const wrench = svg.querySelector('#wrenchGroup');
+      const toolGlow = svg.querySelector('#toolGlow');
+      const rightHand = svg.querySelector('#rightHand');
+      const torso = svg.querySelector('#torsoGroup');
+      const mouth = svg.querySelector('#mouth');
+
+      // Safe guards
+      if(!svg) return;
+
+      // helper functions
+      function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
+      function mapRange(value, inMin, inMax, outMin, outMax){
+        return (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+      }
+
+      // Eye + head tracking: follow cursor, limited range
+      document.addEventListener('mousemove', (e) => {
+        const rect = workerWrap.getBoundingClientRect();
+        const cx = rect.left + rect.width/2;
+        const cy = rect.top + rect.height/2;
+        const dx = e.clientX - cx;
+        const dy = e.clientY - cy;
+
+        const maxX = 12; // pupil movement
+        const maxY = 9;
+        const tx = clamp((dx / rect.width) * 60, -maxX, maxX);
+        const ty = clamp((dy / rect.height) * 40, -maxY, maxY);
+
+        if(pupilLeft) { pupilLeft.setAttribute('cx', tx * 0.8); pupilLeft.setAttribute('cy', ty * 0.8); }
+        if(pupilRight) { pupilRight.setAttribute('cx', tx * 0.8); pupilRight.setAttribute('cy', ty * 0.8); }
+
+        // rotate the torso slightly according to cursor
+        workerWrap.style.transform = `rotate(${mapRange(tx, -maxX, maxX, -6, 6)}deg)`;
+      });
+
+      // Idle wrench subtle animation loop (rotate slightly, pulse tool glow)
+      if(wrench){
+        let angle = 0;
+        setInterval(()=> {
+          angle = Math.sin(Date.now() / 800) * 6; // -6 .. 6
+          wrench.setAttribute('transform', `translate(0,0) rotate(${angle} 55 0)`); // pivot near handle
+          // glow pulse
+          if(toolGlow){
+            const pulse = (Math.sin(Date.now() / 450) + 1) / 2; // 0..1
+            toolGlow.setAttribute('opacity', 0.1 + pulse * 0.5);
+          }
+        }, 50);
+      }
+
+      // antenna glow on hover of CTA buttons (they exist in hero text area)
+      const btns = document.querySelectorAll('.hero-ctas .btn');
+      btns.forEach(b=>{
+        b.addEventListener('mouseenter', ()=> {
+          antennaTip && antennaTip.classList.add('tool-glow');
+          // make right hand wave
+          if(rightHand){
+            rightHand.classList.add('wave-hand-anim');
+            setTimeout(()=> rightHand.classList.remove('wave-hand-anim'), 900);
+          }
+        });
+        b.addEventListener('mouseleave', ()=> {
+          antennaTip && antennaTip.classList.remove('tool-glow');
+        });
+      });
+
+      // small mouth reaction: smile bigger on hover of explore services
+      const exploreBtn = document.querySelector('.hero-ctas .btn-primary');
+      if(exploreBtn){
+        exploreBtn.addEventListener('mouseenter', ()=> {
+          mouth.animate([
+            { d: 'M230 220 q30 18 60 0' },
+            { d: 'M230 216 q30 28 60 0' }, // deeper smile (doesn't animate 'd' in all browsers, just do small translate)
+            { d: 'M230 220 q30 18 60 0' }
+          ], { duration: 600, easing: 'ease-in-out' });
+        });
+      }
+
+      // subtle entrance animation for worker
+      window.addEventListener('load', ()=>{
+        workerWrap.style.opacity = 0;
+        workerWrap.animate([{ opacity: 0, transform:'translateY(12px)' }, { opacity: 1, transform:'translateY(0)' }], { duration: 700, easing: 'cubic-bezier(.2,.9,.28,1)' });
+        setTimeout(()=> workerWrap.style.opacity = 1, 700);
+      });
+
+      // Accessibility: keyboard focus on CTAs also triggers same hover effect
+      btns.forEach(b=>{
+        b.addEventListener('focus', ()=> {
+          antennaTip && antennaTip.classList.add('tool-glow');
+        });
+        b.addEventListener('blur', ()=> {
+          antennaTip && antennaTip.classList.remove('tool-glow');
+        });
+      });
+
+      // small random blink to bring the worker to life
+      function blinkEyes(){
+        const leftEyeWhite = svg.querySelector('#eyeLeft ellipse');
+        const rightEyeWhite = svg.querySelector('#eyeRight ellipse');
+        if(!leftEyeWhite || !rightEyeWhite) return;
+        [leftEyeWhite, rightEyeWhite].forEach(el=>{
+          el.animate([{ transform: 'scaleY(1)' }, { transform: 'scaleY(0.02)', offset:0.95 }, { transform: 'scaleY(1)' }], { duration: 220, easing:'ease-in-out' });
+        });
+      }
+      setInterval(()=> { if(Math.random() > 0.25) blinkEyes(); }, 3500 + Math.random()*2000);
+
+      // When user focuses an input on the page, nod the worker slightly.
+      // We target all inputs on the page to add interactivity (non-invasive)
+      document.querySelectorAll('input, textarea, select').forEach(inp=>{
+        inp.addEventListener('focus', ()=> {
+          workerWrap.classList.add('idle-breath'); // keep breathing
+          workerWrap.animate([{ transform:'rotate(0deg) translateY(0)' }, { transform:'rotate(-3deg) translateY(6px)' }, { transform:'rotate(0deg) translateY(0)' }], { duration: 700, easing:'ease-in-out' });
+        });
+      });
+
+    })();
+  </script>
+</body>
+</html>

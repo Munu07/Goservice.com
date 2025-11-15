@@ -1,0 +1,252 @@
+ n{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile - GoService</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #fffaf4;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .content-wrapper {
+      flex: 1;
+    }
+    .footer {
+      margin-top: auto;
+    }
+
+    /* Navbar */
+    .navbar-custom {
+      background: linear-gradient(90deg, #ff9900, #ffb84d);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+    .navbar-brand.logo-text {
+      font-family: 'Pacifico', cursive;
+      color: #fff !important;
+      font-size: 1.9rem;
+    }
+    .navbar-custom .nav-link {
+      color: white !important;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+    .navbar-custom .nav-link:hover {
+      color: #333 !important;
+      transform: scale(1.05);
+    }
+
+    /* Page Header */
+    h2 {
+      text-align: center;
+      color: #ff9900;
+      margin-top: 40px;
+      font-weight: 700;
+      position: relative;
+    }
+    h2::after {
+      content: "";
+      position: absolute;
+      width: 100px;
+      height: 4px;
+      background: #ff9900;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: -10px;
+      border-radius: 5px;
+    }
+
+    .profile-card {
+        background: #fff;
+        border-radius: 15px;
+        padding: 30px;
+        max-width: 600px;
+        margin: 60px auto 100px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    /* Ensure footer stays at bottom */
+    html, body {
+        height: 100%;
+    }
+    body {
+        display: flex;
+        flex-direction: column;
+    }
+    .content-wrapper {
+        flex: 1;
+    }
+    .footer {
+        margin-top: auto;
+    }
+    .profile-pic {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 3px solid rgb(247, 182, 62);
+        margin-bottom: 15px;
+    }
+    .profile-info p {
+        font-size: 1rem;
+        margin: 8px 0;
+    }
+
+    /* Footer */
+    .footer {
+      background-color: #f7f1e0;
+      color: #333;
+      padding: 20px 0;
+      text-align: center;
+    }
+    .footer i {
+      color: #ff9900;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-custom">
+  <div class="container">
+    <a class="navbar-brand logo-text" href="{% url 'provider_dashboard' %}">GoService</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" href="{% url 'provider_dashboard' %}">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'list_service' %}">List</a></li>
+        <li class="nav-item"><a class="nav-link active" href="{% url 'provider_profile' %}">My Profile</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Page Header -->
+<h2>My Profile</h2>
+
+<div class="content-wrapper">
+<div class="profile-card text-center">
+    <!-- Profile Picture -->
+    {% if provider.user.profile_pic %}
+        <img src="{{ provider.user.profile_pic.url }}" alt="Profile Picture" class="profile-pic">
+    {% else %}
+        <img src="{% static 'main/default_profile.png' %}" alt="Profile Picture" class="profile-pic">
+    {% endif %}
+
+    <h3 class="mb-3">{{ provider.user.username }}</h3>
+
+    <div class="profile-info text-start">
+        <p><strong>Email:</strong> {{ provider.user.email }}</p>
+
+        <p><strong>Phone:</strong> 
+            {% if provider.phone %}
+                {{ provider.phone }}
+            {% elif service %}
+                {{ service.phone }}
+            {% else %}
+                Not available
+            {% endif %}
+        </p>
+
+        <p><strong>Service Type:</strong>
+            {% if service %}
+                {{ service.service_type.profession_name }}
+            {% else %}
+                Not available
+            {% endif %}
+        </p>
+
+        <p><strong>Address:</strong> {{ service.address|default:"Not available" }}</p>
+        <p><strong>Experience:</strong> {{ service.experience|default:"Not available" }}</p>
+        <p><strong>Price (₹/hr):</strong> {{ service.price|default:"Not available" }}</p>
+    </div>
+
+    <button type="button" class="btn btn-primary mt-3 me-2" onclick="toggleEdit()">Edit Details</button>
+    <a href="{% url 'provider_dashboard' %}" class="btn btn-warning mt-3">Back to Dashboard</a>
+
+    <!-- Edit Form (hidden by default) -->
+    <div id="editForm" class="mt-4" style="display: none;">
+        <h4>Edit Service Details</h4>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="id_phone" class="form-label">Phone</label>
+                <input type="text" class="form-control" id="id_phone" name="phone" value="{{ service.phone }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="id_address" class="form-label">Address</label>
+                <textarea class="form-control" id="id_address" name="address" rows="3" required>{{ service.address }}</textarea>
+            </div>
+            <div class="mb-3">
+                <label for="id_experience" class="form-label">Experience</label>
+                <select class="form-select" id="id_experience" name="experience" required>
+                    <option value="0-1" {% if service.experience == '0-1' %}selected{% endif %}>0-1 years</option>
+                    <option value="2-3" {% if service.experience == '2-3' %}selected{% endif %}>2-3 years</option>
+                    <option value="4-5" {% if service.experience == '4-5' %}selected{% endif %}>4-5 years</option>
+                    <option value="6-10" {% if service.experience == '6-10' %}selected{% endif %}>6-10 years</option>
+                    <option value="10+" {% if service.experience == '10+' %}selected{% endif %}>Above 10 years</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="id_price" class="form-label">Price (₹/hr)</label>
+                <input type="number" class="form-control" id="id_price" name="price" value="{{ service.price }}" min="0" step="0.01" required>
+            </div>
+            <button type="submit" class="btn btn-success">Save Changes</button>
+            <button type="button" class="btn btn-secondary ms-2" onclick="toggleEdit()">Cancel</button>
+        </form>
+    </div>
+</div>
+</div>
+
+<script>
+function toggleEdit() {
+    var form = document.getElementById('editForm');
+    if (form.style.display === 'none') {
+        form.style.display = 'block';
+    } else {
+        form.style.display = 'none';
+        // Clear form fields when cancelling
+        document.getElementById('id_phone').value = '{{ service.phone }}';
+        document.getElementById('id_address').value = '{{ service.address }}';
+        document.getElementById('id_experience').value = '{{ service.experience }}';
+        document.getElementById('id_price').value = '{{ service.price }}';
+    }
+}
+</script>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="contact-info mb-2">
+            <i class="fas fa-envelope"></i> info@goservice.com &nbsp; | &nbsp;
+            <i class="fas fa-phone"></i> +91 9876543210 &nbsp; | &nbsp;
+            <i class="fas fa-map-marker-alt"></i> Bengaluru, India
+        </div>
+        <div class="social-icons mb-2">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+        &copy; 2025 GoService - BY Muni_Raj.
+    </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,452 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Service - GoService</title>
+
+    <!-- Fonts & Libraries -->
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <link rel="stylesheet" href="{% static 'main/style.css' %}">
+
+    <style>
+        :root {
+            --orange-1: #ff9900;
+            --orange-2: #ffb84d;
+            --cream-100: #fffaf4;
+            --beige: #f7f1e0;
+            --muted: #666;
+            --card-radius: 15px;
+        }
+
+        body {
+            margin: 0;
+            background: #fff;
+            font-family: 'Poppins', sans-serif;
+            color: #222;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .container.mt-5 {
+            flex: 1;
+        }
+        footer.site-footer {
+            margin-top: auto;
+        }
+
+        /* Navbar */
+        .navbar-custom {
+            background: linear-gradient(90deg, var(--orange-1), var(--orange-2));
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            padding: 14px 0;
+        }
+        .navbar-brand.logo-text {
+            font-family: 'Pacifico', cursive;
+            color: #fff !important;
+            font-size: 1.9rem;
+            text-decoration: none;
+        }
+        .navbar-custom .nav-link {
+            color: #fff !important;
+            font-weight: 500;
+            transition: 0.22s;
+        }
+        .navbar-custom .nav-link:hover {
+            color: #333 !important;
+            transform: scale(1.05);
+        }
+
+        /* Hero Layout */
+        .hero {
+            background: var(--cream-100);
+            padding: 68px 6%;
+        }
+        .hero-inner {
+            max-width: 1100px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 34px;
+            align-items: center;
+        }
+        @media (max-width: 992px) {
+            .hero-inner { grid-template-columns: 1fr; }
+        }
+
+        .hero-image img {
+            width: 100%;
+            max-width: 520px;
+            border-radius: 12px;
+            object-fit: cover;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            animation: float 5s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hero-content h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #222;
+        }
+        .hero-content p {
+            color: var(--muted);
+        }
+
+        .btn-orange {
+            background: var(--orange-1);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 28px;
+            border: none;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+        .btn-orange:hover {
+            background: #e68a00;
+            transform: scale(1.03);
+        }
+
+        /* Form Card */
+        .form-card {
+            background: #fffaf4;
+            border-radius: var(--card-radius);
+            padding: 30px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+            transition: 0.2s;
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .form-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 36px rgba(0,0,0,0.07);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #222;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            transition: 0.3s;
+        }
+        .form-control:focus {
+            border-color: var(--orange-1);
+            box-shadow: 0 0 0 0.2rem rgba(255, 153, 0, 0.25);
+        }
+
+        .btn-custom {
+            background: var(--orange-1);
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 28px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .btn-custom:hover {
+            background: #e68a00;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            border-radius: 28px;
+            transition: 0.3s;
+        }
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+        }
+
+        footer.site-footer {
+            background: var(--beige);
+            color: #333;
+            text-align: center;
+            padding: 22px 0;
+            margin-top: 28px;
+        }
+        footer.site-footer i { color: var(--orange-1); margin-right: 5px; }
+        footer.site-footer a { color: var(--orange-1); text-decoration: none; transition: 0.3s; }
+        footer.site-footer a:hover { color: #e68a00; }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container">
+        <a class="navbar-brand logo-text" href="{% url 'provider_dashboard' %}">GoService</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navMain">
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item"><a class="nav-link" href="{% url 'provider_dashboard' %}">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'list_service' %}">List</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'provider_profile' %}">Profile</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'provider_view_bookings' %}">Bookings</a></li>
+                 <li class="nav-item"><a class="nav-link" href="{% url 'provider_service_history' %}">Service History</a></li>
+                <li class="nav-item"><span class="nav-link earnings-badge">₹{{ total_earnings }}</span></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <div class="form-card">
+        <h2 class="text-center mb-4">List Your Service</h2>
+
+        <!-- Display messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Display form errors -->
+        {% if form.errors %}
+            <div class="alert alert-danger mb-3">
+                <strong>Form errors:</strong>
+                <ul>
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li>{{ field.label }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="row">
+                <!-- Profession / Service Type -->
+                <div class="col-md-6 form-group">
+                    <div class="mb-3">
+                        <label class="form-label">Profession / Service Type</label>
+                        {{ form.service_type }}
+                    </div>
+                </div>
+
+                <!-- Address -->
+                <div class="col-md-6 form-group">
+                    <div class="mb-3">
+                        <label class="form-label">Address</label>
+                        {{ form.address }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Phone Number -->
+                <div class="col-md-6 form-group">
+                    <div class="mb-3">
+                        <label class="form-label">Phone Number</label>
+                        {{ form.phone }}
+                    </div>
+                </div>
+
+                <!-- Experience -->
+                <div class="col-md-6 form-group">
+                    <div class="mb-3">
+                        <label class="form-label">Experience</label>
+                        {{ form.experience }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Price -->
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <div class="mb-3">
+                        <label class="form-label">Price per Hour (₹)</label>
+                        {{ form.price }}
+                    </div>
+                </div>
+                <div class="col-md-6 form-group">
+                    <!-- Empty column for balance -->
+                </div>
+            </div>
+
+            <!-- Submit / Reset Buttons -->
+            <div class="mb-5 text-center">
+                <button type="submit" class="btn btn-custom me-2">Submit</button>
+                <button type="reset" class="btn btn-secondary">Clear</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<footer class="site-footer">
+    <div class="container">
+        <div class="contact-info mb-2">
+            <i class="fas fa-envelope"></i> info@goservice.com &nbsp; | &nbsp;
+            <i class="fas fa-phone"></i> +91 9876543210 &nbsp; | &nbsp;
+            <i class="fas fa-map-marker-alt"></i> Bengaluru, India
+        </div>
+        <div class="social-icons mb-2">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+        &copy; 2025 GoService - BY Muni_Raj.
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+AOS.init({ duration: 900, once: true });
+
+// Clear form fields after successful submission
+document.addEventListener('DOMContentLoaded', function() {
+    // Check for success message and reset form for new submissions
+    if (document.querySelector('.alert-success')) {
+        const form = document.querySelector('form');
+        form.reset();
+        // Do not disable form fields, allow new submissions
+        // Update submit button text temporarily
+        const submitBtn = document.querySelector('button[type="submit"]');
+        submitBtn.textContent = 'Service Listed Successfully';
+        submitBtn.classList.remove('btn-custom');
+        submitBtn.classList.add('btn-success');
+        // Re-enable after a short delay
+        setTimeout(() => {
+            submitBtn.textContent = 'Submit';
+            submitBtn.classList.remove('btn-success');
+            submitBtn.classList.add('btn-custom');
+        }, 3000);
+    }
+
+    const form = document.querySelector('form');
+    const submitBtn = document.querySelector('button[type="submit"]');
+
+    form.addEventListener('submit', function(e) {
+        let isValid = true;
+        const errors = [];
+
+        // Get form fields
+        const serviceType = document.querySelector('#id_service_type');
+        const address = document.querySelector('#id_address');
+        const phone = document.querySelector('#id_phone');
+        const experience = document.querySelector('#id_experience');
+        const price = document.querySelector('#id_price');
+
+        // Clear previous errors
+        document.querySelectorAll('.error-message').forEach(el => el.remove());
+        document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+
+        // Validate service type
+        if (!serviceType.value.trim()) {
+            isValid = false;
+            serviceType.classList.add('is-invalid');
+            serviceType.insertAdjacentHTML('afterend', '<div class="error-message text-danger">Service type is required.</div>');
+        }
+
+        // Validate address
+        if (!address.value.trim()) {
+            isValid = false;
+            address.classList.add('is-invalid');
+            address.insertAdjacentHTML('afterend', '<div class="error-message text-danger">Address is required.</div>');
+        }
+
+        // Validate phone
+        const phoneRegex = /^[6-9]\d{9}$/;
+        if (!phone.value.trim()) {
+            isValid = false;
+            phone.classList.add('is-invalid');
+            phone.insertAdjacentHTML('afterend', '<div class="error-message text-danger">Phone number is required.</div>');
+        } else if (phone.value.trim().length !== 10) {
+            isValid = false;
+            phone.classList.add('is-invalid');
+            phone.insertAdjacentHTML('afterend', '<div class="error-message text-danger">Phone number must be exactly 10 digits.</div>');
+        } else if (!phoneRegex.test(phone.value.trim())) {
+            isValid = false;
+            phone.classList.add('is-invalid');
+            phone.insertAdjacentHTML('afterend', '<div class="error-message text-danger">Enter a valid 10-digit phone number starting with 6-9.</div>');
+        }
+
+        // Validate experience
+        if (!experience.value.trim()) {
+            isValid = false;
+            experience.classList.add('is-invalid');
+            experience.insertAdjacentHTML('afterend', '<div class="error-message text-danger">Experience is required.</div>');
+        }
+
+        // Validate price
+        if (!price.value.trim()) {
+            isValid = false;
+            price.classList.add('is-invalid');
+            price.insertAdjacentHTML('afterend', '<div class="error-message text-danger">Price is required.</div>');
+        } else if (isNaN(price.value.trim()) || parseFloat(price.value.trim()) <= 0) {
+            isValid = false;
+            price.classList.add('is-invalid');
+            price.insertAdjacentHTML('afterend', '<div class="error-message text-danger">Enter a valid positive number for price.</div>');
+        }
+
+        if (!isValid) {
+            e.preventDefault();
+            // Scroll to first error
+            const firstError = document.querySelector('.error-message');
+            if (firstError) {
+                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        } else {
+            // Disable submit button to prevent multiple submissions
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+        }
+    });
+
+    // Real-time validation feedback
+    document.querySelectorAll('input, select, textarea').forEach(field => {
+        field.addEventListener('blur', function() {
+            if (this.value.trim()) {
+                this.classList.remove('is-invalid');
+                const errorMsg = this.nextElementSibling;
+                if (errorMsg && errorMsg.classList.contains('error-message')) {
+                    errorMsg.remove();
+                }
+            }
+        });
+    });
+
+    // Clear button functionality
+    document.querySelector('button[type="reset"]').addEventListener('click', function(e) {
+        e.preventDefault(); // Prevent default reset behavior
+        // Manually clear all form fields
+        document.querySelectorAll('input, select, textarea').forEach(field => {
+            field.value = '';
+            field.classList.remove('is-invalid');
+        });
+        // Clear any error messages
+        document.querySelectorAll('.error-message').forEach(el => el.remove());
+        // Clear any alerts
+        document.querySelectorAll('.alert').forEach(el => el.remove());
+    });
+});
+</script>
+</body>
+</html>

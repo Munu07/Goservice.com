@@ -1,0 +1,255 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment - GoService</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a2d9b0a02c.js" crossorigin="anonymous"></script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #fff8f0, #fff3e6);
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .payment-wrapper {
+      display: flex;
+      width: 850px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+      animation: fadeIn 1s ease;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(50px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    /* Left panel */
+    .payment-summary {
+      background: linear-gradient(180deg, #ff6600, #ff9900);
+      color: #fff;
+      width: 35%;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .payment-summary h3 {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+    }
+
+    .payment-summary .amount {
+      font-size: 2.4rem;
+      font-weight: 700;
+      margin-top: 20px;
+    }
+
+    /* Right form section */
+    .payment-form {
+      width: 65%;
+      padding: 50px;
+      background: #fff;
+    }
+
+    .payment-form h4 {
+      font-weight: 700;
+      color: #ff6600;
+      margin-bottom: 25px;
+    }
+
+    .payment-options {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+
+    .option {
+      background: #fff7ed;
+      border: 2px solid #ffe0b3;
+      border-radius: 12px;
+      padding: 10px 18px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .option.active, .option:hover {
+      background: #ff6600;
+      color: white;
+      transform: scale(1.05);
+    }
+
+    .form-control {
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 0.95rem;
+      margin-bottom: 15px;
+    }
+
+    .btn-pay {
+      width: 100%;
+      background: linear-gradient(90deg, #ff6600, #ffa64d);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 12px;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .btn-pay:hover {
+      transform: scale(1.03);
+      box-shadow: 0 6px 18px rgba(255, 153, 0, 0.4);
+    }
+
+    .note {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #888;
+      margin-top: 10px;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #ff9900;
+      box-shadow: 0 0 6px rgba(255,153,0,0.3);
+    }
+  </style>
+</head>
+<body>
+
+<div class="payment-wrapper">
+  <div class="payment-summary">
+    <h3>GoService</h3>
+    <p>Payment for</p>
+    <h5>{{ booking.service.service_type.profession_name }}</h5>
+    <p><strong>Provider:</strong> {{ booking.provider.user.username }}</p>
+    <div class="amount">₹{{ amount }}</div>
+  </div>
+
+  <div class="payment-form">
+    <h4>Select Payment Method</h4>
+
+    <div class="payment-options">
+      <div class="option" data-method="card"><i class="fa-regular fa-credit-card"></i> Card</div>
+      <div class="option" data-method="upi"><i class="fa-brands fa-google-pay"></i> UPI</div>
+      <div class="option" data-method="paypal"><i class="fa-brands fa-paypal"></i> PayPal</div>
+      <div class="option" data-method="cod"><i class="fa-solid fa-money-bill-wave"></i> COD</div>
+    </div>
+
+    <form id="paymentForm" method="POST">
+      {% csrf_token %}
+
+      <!-- Card Section -->
+      <div id="cardFields" style="display:none;">
+        <input type="text" class="form-control" id="card_number" maxlength="10" placeholder="Card Number (10 digits)">
+        <input type="text" class="form-control" id="card_holder" placeholder="Cardholder Name">
+        <div class="d-flex gap-2">
+          <input type="number" class="form-control" id="expiry_year" placeholder="MM/YY">
+          <input type="text" class="form-control" id="cvv" maxlength="3" placeholder="CVV">
+        </div>
+        <div class="form-check mt-2">
+          <input class="form-check-input" type="checkbox" id="save_card">
+          <label class="form-check-label" for="save_card">Save card details for future use</label>
+        </div>
+        <button type="submit" class="btn-pay mt-3">Pay Now</button>
+      </div>
+
+      <!-- UPI Section -->
+      <div id="upiFields" style="display:none;">
+        <input type="text" class="form-control" id="upi_id" placeholder="example@bank">
+        <button type="submit" class="btn-pay mt-3">Pay Now via UPI</button>
+      </div>
+
+      <!-- PayPal Section -->
+      <div id="paypalFields" style="display:none;">
+        <p>Redirecting to PayPal secure checkout...</p>
+        <button type="submit" class="btn-pay mt-3">Pay with PayPal</button>
+      </div>
+
+      <!-- COD Section -->
+      <div id="codFields" style="display:none;">
+        <p>Pay in cash after service completion.</p>
+        <button type="submit" class="btn-pay mt-3">Confirm COD</button>
+      </div>
+
+      <p class="note">Your payment information is securely encrypted.</p>
+    </form>
+  </div>
+</div>
+
+<script>
+  const options = document.querySelectorAll('.option');
+  const cardFields = document.getElementById('cardFields');
+  const upiFields = document.getElementById('upiFields');
+  const paypalFields = document.getElementById('paypalFields');
+  const codFields = document.getElementById('codFields');
+  const paymentForm = document.getElementById('paymentForm');
+
+  options.forEach(opt => {
+    opt.addEventListener('click', () => {
+      options.forEach(o => o.classList.remove('active'));
+      opt.classList.add('active');
+
+      cardFields.style.display = 'none';
+      upiFields.style.display = 'none';
+      paypalFields.style.display = 'none';
+      codFields.style.display = 'none';
+
+      if (opt.dataset.method === 'card') cardFields.style.display = 'block';
+      if (opt.dataset.method === 'upi') upiFields.style.display = 'block';
+      if (opt.dataset.method === 'paypal') paypalFields.style.display = 'block';
+      if (opt.dataset.method === 'cod') codFields.style.display = 'block';
+    });
+  });
+
+  paymentForm.addEventListener('submit', function(e){
+    const selected = document.querySelector('.option.active');
+    if(!selected) { alert('Please select a payment method'); e.preventDefault(); return; }
+
+    const method = selected.dataset.method;
+
+    if(method === 'upi') {
+      const upi = document.getElementById('upi_id').value.trim();
+      if(!upi.includes('@')) { alert('Enter a valid UPI ID'); e.preventDefault(); return; }
+    }
+
+    if(method === 'card') {
+      const card = document.getElementById('card_number').value.trim();
+      const name = document.getElementById('card_holder').value.trim();
+      const expiry = document.getElementById('expiry_year').value.trim();
+      const cvv = document.getElementById('cvv').value.trim();
+
+      if(card.length !== 10) { alert('Card number must be 10 digits'); e.preventDefault(); return; }
+      if(name === '') { alert('Enter cardholder name'); e.preventDefault(); return; }
+      if(!expiry.match(/^[0-1][0-9]\/[0-9]{2}$/)) { alert('Enter valid expiry (MM/YY)'); e.preventDefault(); return; }
+      if(cvv.length !== 3) { alert('CVV must be 3 digits'); e.preventDefault(); return; }
+    }
+
+    if(method === 'paypal') {
+      alert('Redirecting to PayPal...');
+    }
+  });
+</script>
+
+</body>
+</html>

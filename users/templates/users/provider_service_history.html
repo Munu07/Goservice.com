@@ -1,0 +1,216 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service History - GoService</title>
+
+    <!-- Fonts & Libraries -->
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <link rel="stylesheet" href="{% static 'main/style.css' %}">
+
+    <style>
+        :root {
+            --orange-1: #ff9900;
+            --orange-2: #ffb84d;
+            --cream-100: #fffaf4;
+            --beige: #f7f1e0;
+            --muted: #666;
+            --card-radius: 15px;
+        }
+
+        body {
+            margin: 0;
+            background: #fff;
+            font-family: 'Poppins', sans-serif;
+            color: #222;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .container.mb-5 {
+            flex: 1;
+        }
+        footer.site-footer {
+            margin-top: auto;
+        }
+
+        /* Navbar */
+        .navbar-custom {
+            background: linear-gradient(90deg, var(--orange-1), var(--orange-2));
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            padding: 14px 0;
+        }
+        .navbar-brand.logo-text {
+            font-family: 'Pacifico', cursive;
+            color: #fff !important;
+            font-size: 1.9rem;
+            text-decoration: none;
+        }
+        .navbar-custom .nav-link {
+            color: #fff !important;
+            font-weight: 500;
+            transition: 0.22s;
+        }
+        .navbar-custom .nav-link:hover {
+            color: #333 !important;
+            transform: scale(1.05);
+        }
+
+        /* Banner */
+        .banner img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            animation: float 5s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* History Card */
+        .history-card {
+            background: #fffaf4;
+            border-radius: var(--card-radius);
+            padding: 30px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+            transition: 0.3s;
+            animation: fadeInUp 1s ease-in-out;
+            margin-bottom: 20px;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .history-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 36px rgba(0,0,0,0.07);
+        }
+
+        .profile-pic {
+            transition: transform 0.3s;
+        }
+        .profile-pic:hover {
+            transform: scale(1.1);
+        }
+
+        footer.site-footer {
+            background: var(--beige);
+            color: #333;
+            text-align: center;
+            padding: 22px 0;
+            margin-top: 28px;
+        }
+        footer.site-footer i { color: var(--orange-1); margin-right: 5px; }
+        footer.site-footer a { color: var(--orange-1); text-decoration: none; transition: 0.3s; }
+        footer.site-footer a:hover { color: #e68a00; }
+    </style>
+</head>
+<body>
+
+{% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container">
+        <a class="navbar-brand logo-text" href="{% url 'provider_dashboard' %}">GoService</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navMain">
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item"><a class="nav-link" href="{% url 'provider_dashboard' %}">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'list_service' %}">List</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'provider_profile' %}">Profile</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'provider_view_bookings' %}">Bookings</a></li>
+                <li class="nav-item"><a class="nav-link active" href="{% url 'provider_service_history' %}">Service History</a></li>
+                <li class="nav-item"><span class="nav-link earnings-badge">₹{{ total_earnings }}</span></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="banner">
+    <img src="{% static 'main/pexels.png' %}" alt="Service History Banner">
+</div>
+
+<div class="container mb-5">
+    <h2 class="text-center mb-4">Service History</h2>
+
+    {% if completed_bookings %}
+        <div class="row g-4">
+        {% for booking in completed_bookings %}
+            <div class="col-md-6">
+                <div class="history-card">
+                    <div class="d-flex align-items-center mb-2">
+                        {% if booking.customer.user.profile_pic %}
+                            <img src="{{ booking.customer.user.profile_pic.url }}" class="rounded-circle me-3 profile-pic" width="60" height="60" alt="Profile Picture">
+                        {% else %}
+                            <img src="{% static 'main/default-profile.png' %}" class="rounded-circle me-3 profile-pic" width="60" height="60" alt="Default Profile">
+                        {% endif %}
+                        <div>
+                            <h5>{{ booking.customer.user.username }}</h5>
+                            <small class="text-muted">{{ booking.customer.user.email }}</small>
+                        </div>
+                    </div>
+
+                    <p><strong>Service:</strong> {{ booking.service.service_type.profession_name }}</p>
+                    <p><strong>Phone:</strong> {{ booking.customer.phone }}</p>
+                    <p><strong>Address:</strong> {{ booking.customer.address }}</p>
+                    <p><strong>Scheduled Date:</strong> {{ booking.schedule_date }}</p>
+                    <p><strong>Timing:</strong> {{ booking.timing }}</p>
+                    <p><strong>Price:</strong> ₹{{ booking.service.price }}</p>
+                    <p><strong>Status:</strong> <span class="badge bg-success">Completed</span></p>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center">No completed services yet.</div>
+    {% endif %}
+</div>
+
+<footer class="site-footer">
+    <div class="container">
+        <div class="contact-info mb-2">
+            <i class="fas fa-envelope"></i> info@goservice.com &nbsp; | &nbsp;
+            <i class="fas fa-phone"></i> +91 9876543210 &nbsp; | &nbsp;
+            <i class="fas fa-map-marker-alt"></i> Bengaluru, India
+        </div>
+        <div class="social-icons mb-2">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+        &copy; 2025 GoService - BY Muni_Raj.
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+<script>
+AOS.init({ duration: 900, once: true });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,270 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful - GoService</title>
+
+    <!-- Google Fonts for Logo -->
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'main/style.css' %}">
+
+    <!-- Lottie for animations -->
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+    <style>
+        /* Navbar */
+        .navbar-custom { background-color: #ff9900; }
+        .navbar-custom .nav-link { color: #fff; }
+        .navbar-custom .nav-link:hover { color: #ffd699; }
+
+        /* Logo font */
+        .navbar-brand.logo-text {
+            font-family: 'Pacifico', cursive;
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+        }
+
+        /* Page background */
+        body {
+            background-color: #fffaf4;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .container {
+            flex: 1;
+        }
+
+        .footer {
+            margin-top: auto;
+        }
+
+        /* Success section */
+        .success-container {
+            text-align: center;
+            padding: 50px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .success-animation {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+        }
+
+        .success-title {
+            color: #ff9900;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            animation: fadeIn 1s ease-in;
+        }
+
+        .success-subtitle {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 20px;
+            animation: slideUp 1s ease-in 0.5s both;
+        }
+
+        .success-message {
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 40px;
+            animation: slideUp 1s ease-in 1s both;
+        }
+
+        /* Order summary card */
+        .order-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+            padding: 30px;
+            margin-bottom: 40px;
+            animation: slideUp 1s ease-in 1.5s both;
+        }
+
+        .order-card h4 {
+            color: #ff9900;
+            margin-bottom: 20px;
+        }
+
+        .order-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .order-detail:last-child {
+            border-bottom: none;
+        }
+
+        /* Buttons */
+        .btn-custom {
+            background-color: #ff9900;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-custom:hover {
+            background-color: #e68a00;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(255, 153, 0, 0.3);
+        }
+
+        .btn-outline-custom {
+            border: 2px solid #ff9900;
+            color: #ff9900;
+            background: transparent;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-custom:hover {
+            background-color: #ff9900;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Robot animation */
+        .robot-animation {
+            width: 160px;
+            height: 160px;
+            margin: 20px auto;
+        }
+
+        /* Floating phone animation container (separate) */
+        .phone-animation {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container">
+        <a class="navbar-brand logo-text" href="#">GoService</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="{% url 'customer_dashboard' %}">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Support</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Success Content -->
+<div class="container">
+    <div class="success-container">
+        <!-- Success Animation -->
+        <lottie-player class="success-animation"
+                       src="https://assets1.lottiefiles.com/packages/lf20_jbrw3hwm.json"
+                       background="transparent" speed="1" autoplay></lottie-player>
+
+        <!-- Success Texts -->
+        <h1 class="success-title">Payment Successful!</h1>
+        <h3 class="success-subtitle">Your service has been confirmed 🎉</h3>
+        <p class="success-message">
+            Thank you for choosing GoService. Your payment has been processed successfully. We've sent a confirmation email with your order details.
+        </p>
+
+        <!-- Order Summary Card -->
+        <div class="order-card">
+            <h4>Order Summary</h4>
+            <div class="order-detail">
+                <span><strong>Order ID:</strong></span>
+                <span>#GS{{ booking.id|slice:":8" }}</span>
+            </div>
+            <div class="order-detail">
+                <span><strong>Service Booked:</strong></span>
+                <span>{{ booking.service.service_type.profession_name }}</span>
+            </div>
+            <div class="order-detail">
+                <span><strong>Amount Paid:</strong></span>
+                <span>₹{{ amount }}</span>
+            </div>
+            <div class="order-detail">
+                <span><strong>Payment Method:</strong></span>
+                <span>UPI - ****9021</span>
+            </div>
+            <div class="order-detail">
+                <span><strong>Expected Service Date:</strong></span>
+                <span>{{ booking.schedule_date }}</span>
+            </div>
+        </div>
+
+        <!-- Floating phone animation moved here separately -->
+        <div class="phone-animation">
+            <lottie-player src="https://assets3.lottiefiles.com/packages/lf20_qp1q7mct.json"
+                           background="transparent" speed="1"
+                           style="width: 220px; height: 220px;" loop autoplay></lottie-player>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="d-flex justify-content-center">
+            <a href="{% url 'customer_bookings' %}" class="btn btn-custom">Track Service</a>
+            <a href="{% url 'customer_dashboard' %}" class="btn btn-outline-custom">Return to Dashboard</a>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer text-center mt-5 py-3" style="background-color: #f7f1e0;">
+    <div class="container">
+        <div class="contact-info mb-2">
+            <i class="fas fa-envelope"></i> info@goservice.com &nbsp; | &nbsp;
+            <i class="fas fa-phone"></i> +91 9876543210 &nbsp; | &nbsp;
+            <i class="fas fa-map-marker-alt"></i> Bengaluru, India
+        </div>
+        <div class="social-icons mb-2">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+        &copy; 2025 GoService - BY Muni_Raj.
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,523 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GoService — Signup</title>
+
+  <!-- bootstrap for layout -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    :root{
+      --orange-600:#ff7a00;
+      --orange-500:#ff8a1a;
+      --muted:#6b6b6b;
+      --glass-bg: rgba(255,255,255,0.65);
+      --card-radius:16px;
+      --shadow: 0 12px 40px rgba(17,17,17,0.06);
+    }
+
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,Roboto,Arial;background:linear-gradient(135deg,#fff7f0 0%,#ffd6a5 100%);-webkit-font-smoothing:antialiased;}
+    .container-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:36px 18px;}
+
+    /* panel - robot left, card right */
+    .panel {
+      width: 100%;
+      max-width: 1100px;
+      display: flex;
+      gap: 28px;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* Robot container outside the form (left) */
+    .robot-side {
+      width: 420px;
+      max-width: 42%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      pointer-events:none; /* don't block form clicks */
+    }
+
+    .robot-wrap {
+      width: 320px;
+      height: 420px;
+      pointer-events: none;
+      transform-origin: center;
+      transition: transform .22s ease;
+      animation: floaty 6s ease-in-out infinite;
+    }
+
+    @keyframes floaty {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+      100% { transform: translateY(0px); }
+    }
+
+    /* form card (glass) */
+    .glass-card {
+      flex:1;
+      max-width:520px;
+      background: linear-gradient(180deg, var(--glass-bg), rgba(255,255,255,0.48));
+      border-radius: var(--card-radius);
+      padding: 26px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,0.22);
+      position: relative;
+    }
+
+    .glass-card .card-title { font-size: 1.25rem; font-weight:700; color:#222; margin-bottom:6px; }
+    .glass-card .card-sub { color:var(--muted); margin-bottom:14px; }
+
+    /* form fields */
+    .form-control { border-radius:10px; padding:12px 14px; border:1px solid rgba(0,0,0,0.08); background:rgba(255,255,255,0.9); transition: box-shadow .15s, border-color .12s; }
+    .form-control:focus { box-shadow: 0 8px 24px rgba(255,122,0,0.12); border-color: var(--orange-600); outline: none; transform: translateY(-1px); }
+
+    .input-invalid { border-color: #e74c3c !important; box-shadow: 0 6px 20px rgba(231,76,60,0.08) !important; }
+    .input-valid { border-color: #28a745 !important; box-shadow: 0 6px 20px rgba(40,167,69,0.08) !important; }
+
+    .btn-orange {
+      display:inline-block;background:linear-gradient(90deg,var(--orange-600),#ff9b3a);color:#fff;border:none;padding:11px;border-radius:10px;font-weight:700;width:100%;
+      box-shadow: 0 12px 30px rgba(255,122,0,0.12);
+    }
+    .btn-orange:hover { transform: translateY(-3px); }
+
+    .muted { color:var(--muted); font-size:0.95rem; }
+
+    .login-btn {
+      display: inline-block;
+      background: linear-gradient(90deg, var(--orange-600), #ff9b3a);
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(255,122,0,0.2);
+      transition: all 0.3s ease;
+      animation: pulse 2s infinite;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(255,122,0,0.3);
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 8px 20px rgba(255,122,0,0.2); }
+      50% { box-shadow: 0 8px 30px rgba(255,122,0,0.4); }
+      100% { box-shadow: 0 8px 20px rgba(255,122,0,0.2); }
+    }
+
+    /* small inline error */
+    .field-error { color:#b02a37; font-size:0.88rem; margin-top:6px; display:none; }
+
+    /* robot micro parts (we will target these by id) */
+    /* keep pointer-events none for SVG shapes that aren't interactive */
+    svg { display:block; width:100%; height:100%; }
+
+    /* robot reactions CSS classes toggled from JS */
+    .robot-wave .wave-hand { animation: handWave 0.9s ease-in-out 1; }
+    @keyframes handWave {
+      0% { transform: rotate(0deg) translateX(0px); }
+      25% { transform: rotate(-20deg) translateX(6px); }
+      50% { transform: rotate(18deg) translateX(0px); }
+      75% { transform: rotate(-12deg) translateX(4px); }
+      100% { transform: rotate(0deg) translateX(0px); }
+    }
+
+    .robot-nod { animation: nodHead 0.9s ease-in-out 1; }
+    @keyframes nodHead {
+      0% { transform: translateY(0) rotate(0deg); }
+      30% { transform: translateY(6px) rotate(3deg); }
+      60% { transform: translateY(0) rotate(-2deg); }
+      100% { transform: translateY(0) rotate(0deg); }
+    }
+
+    .antenna-glow { filter: drop-shadow(0 6px 14px rgba(255,160,80,0.6)); transition: filter .18s; }
+
+    /* responsiveness */
+    @media (max-width: 980px) {
+      .panel { flex-direction: column-reverse; gap: 20px; padding: 14px; }
+      .robot-side { width:100%; justify-content:center; }
+      .robot-wrap { width: 220px; height: 290px; }
+      .glass-card { width:100%; max-width:560px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container-wrap">
+    <div class="panel">
+
+      <!-- LEFT: Robot side (outside the form) -->
+      <div class="robot-side" aria-hidden="true">
+        <div class="robot-wrap" id="robotWrap" aria-hidden="true">
+          <!-- Full anime-cute robot SVG (head, antenna, body, arms, legs) -->
+          <svg viewBox="0 0 320 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Assistant Robot">
+            <!-- ground shadow -->
+            <ellipse cx="160" cy="390" rx="90" ry="20" fill="rgba(0,0,0,0.06)"/>
+
+            <!-- legs -->
+            <g id="legs">
+              <rect x="110" y="330" width="28" height="52" rx="12" fill="#ff9b3a"/>
+              <rect x="182" y="330" width="28" height="52" rx="12" fill="#ff9b3a"/>
+            </g>
+
+            <!-- body -->
+            <g id="body">
+              <rect x="90" y="190" width="140" height="140" rx="28" fill="#ffb370" stroke="#ff8a1a" stroke-width="2"/>
+              <rect x="120" y="220" width="80" height="64" rx="12" fill="#fff" opacity="0.14"/>
+              <circle cx="160" cy="254" r="6" fill="#fff"/>
+            </g>
+
+            <!-- left arm with wave-hand group -->
+            <g id="leftArm">
+              <rect x="52" y="210" width="30" height="90" rx="14" fill="#ff9945"/>
+              <g id="leftHand" class="wave-hand" transform="translate(40,280)">
+                <circle cx="12" cy="12" r="14" fill="#ff7a00"/>
+              </g>
+            </g>
+
+            <!-- right arm -->
+            <g id="rightArm">
+              <rect x="238" y="210" width="30" height="90" rx="14" fill="#ff9945"/>
+              <g id="rightHand" transform="translate(246,280)">
+                <circle cx="12" cy="12" r="14" fill="#ff7a00"/>
+              </g>
+            </g>
+
+            <!-- head -->
+            <g id="head" transform="translate(0,0)">
+              <rect x="70" y="48" width="180" height="140" rx="24" fill="#ff8a1a" stroke="#ff6600" stroke-width="3"/>
+              <rect x="94" y="78" width="132" height="88" rx="14" fill="#fff" opacity="0.12"/>
+
+              <!-- eyes group -->
+              <g id="eyes">
+                <g id="eyeLeft" transform="translate(130,110)">
+                  <ellipse class="eye-white" rx="18" ry="14" fill="#fff"/>
+                  <circle id="pupilL" cx="0" cy="0" r="7" fill="#0b0b0b"/>
+                </g>
+                <g id="eyeRight" transform="translate(200,110)">
+                  <ellipse class="eye-white" rx="18" ry="14" fill="#fff"/>
+                  <circle id="pupilR" cx="0" cy="0" r="7" fill="#0b0b0b"/>
+                </g>
+              </g>
+
+              <!-- blush -->
+              <circle id="blushL" cx="120" cy="150" r="8" fill="#ffb0a0" opacity="0" />
+              <circle id="blushR" cx="220" cy="150" r="8" fill="#ffb0a0" opacity="0" />
+
+              <!-- antenna -->
+              <g id="antenna">
+                <line x1="160" y1="48" x2="160" y2="18" stroke="#ff6600" stroke-width="6" stroke-linecap="round"/>
+                <circle id="antennaTip" cx="160" cy="12" r="9" fill="#ffd1a8" stroke="#ff8a1a" stroke-width="2"/>
+              </g>
+
+              <!-- smile (path) -->
+              <path id="smile" d="M132 158 q28 22 56 0" stroke="#6b3a00" stroke-width="3" fill="none" stroke-linecap="round"/>
+            </g>
+
+            <!-- decorative HUD lines -->
+            <g id="hud" opacity="0.9">
+              <rect x="30" y="22" rx="6" width="40" height="12" fill="#fff" opacity="0.06"/>
+              <rect x="250" y="22" rx="6" width="30" height="8" fill="#fff" opacity="0.06"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- RIGHT: Signup form (glass card) -->
+      <div class="glass-card" role="region" aria-labelledby="signupTitle">
+        <div class="glass-inner">
+          <h2 id="signupTitle" class="card-title">Create Your Account</h2>
+          <div class="card-sub">Join <strong>GoService</strong> as a {{ role }}</div>
+
+          <!-- server-side errors (Django) -->
+          {% if form.errors %}
+            <div class="alert alert-warning">
+              <ul class="mb-0">
+                {% for field in form %}
+                  {% for error in field.errors %}
+                    <li>{{ field.label }}: {{ error }}</li>
+                  {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                  <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+
+          <form id="signupForm" method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+
+            <!-- Username -->
+            <div class="mb-3">
+              {{ form.username.label_tag }}
+              {{ form.username }}
+              <div class="field-error" id="err-username">Username is required.</div>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+              {{ form.email.label_tag }}
+              {{ form.email }}
+              <div class="field-error" id="err-email">Please enter a valid email address.</div>
+            </div>
+
+            <!-- Profile picture -->
+            <div class="mb-3">
+              {{ form.profile_pic.label_tag }}
+              {{ form.profile_pic }}
+              <div class="field-error" id="err-profile">Image must be under 2MB and of type image/*.</div>
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+              {{ form.password1.label_tag }}
+              {{ form.password1 }}
+              <div class="field-error" id="err-password">Password must be at least 8 characters.</div>
+            </div>
+
+            <!-- Confirm -->
+            <div class="mb-3">
+              {{ form.password2.label_tag }}
+              {{ form.password2 }}
+              <div class="field-error" id="err-password2">Passwords do not match.</div>
+            </div>
+
+            <button type="submit" class="btn-orange" id="submitBtn">Sign Up</button>
+
+            <div class="help-line text-center mt-3">
+              Already have an account?
+              {% if role == 'Service Provider' %}
+                <button onclick="window.location.href='{% url 'login_provider' %}'" class="login-btn">Login here</button>
+              {% else %}
+                <button onclick="window.location.href='{% url 'login_customer' %}'" class="login-btn">Login here</button>
+              {% endif %}
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Inline JS: animations & validation -->
+  <script>
+    (function(){
+      // ---- get DOM elements ----
+      const robotWrap = document.getElementById('robotWrap');
+      const assistant = document.getElementById('head'); // head group
+      const pupilL = document.getElementById('pupilL');
+      const pupilR = document.getElementById('pupilR');
+      const blushL = document.getElementById('blushL');
+      const blushR = document.getElementById('blushR');
+      const antennaTip = document.getElementById('antennaTip');
+      const leftHand = document.getElementById('leftHand');
+      const smile = document.getElementById('smile');
+
+      const form = document.getElementById('signupForm');
+      const usernameInput = document.querySelector('[name="{{ form.username.name }}"]') || document.querySelector('input[name="username"]');
+      const emailInput = document.querySelector('[name="{{ form.email.name }}"]') || document.querySelector('input[name="email"]');
+      const profileInput = document.querySelector('[name="{{ form.profile_pic.name }}"]') || document.querySelector('input[name="profile_pic"]');
+      const pass1Input = document.querySelector('[name="{{ form.password1.name }}"]') || document.querySelector('input[name="password1"]');
+      const pass2Input = document.querySelector('[name="{{ form.password2.name }}"]') || document.querySelector('input[name="password2"]');
+      const submitBtn = document.getElementById('submitBtn');
+
+      // error elements
+      const errUsername = document.getElementById('err-username');
+      const errEmail = document.getElementById('err-email');
+      const errProfile = document.getElementById('err-profile');
+      const errPass = document.getElementById('err-password');
+      const errPass2 = document.getElementById('err-password2');
+
+      // helper map
+      function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
+      function mapRange(value,inMin,inMax,outMin,outMax){ return (value - inMin) * (outMax - outMin)/(inMax-inMin) + outMin; }
+
+      // set default classes on form widgets so styling consistent (in case Django didn't set form-control)
+      document.querySelectorAll('#signupForm input').forEach(inp=>{
+        if(!inp.classList.contains('form-control')) inp.classList.add('form-control');
+      });
+
+      // ---- eye tracking ----
+      // compute center of robot head area and move pupils proportionally
+      document.addEventListener('mousemove', (e) => {
+        const rect = robotWrap.getBoundingClientRect();
+        const cx = rect.left + rect.width/2;
+        const cy = rect.top + rect.height/2;
+        const dx = e.clientX - cx;
+        const dy = e.clientY - cy;
+
+        // limit movement
+        const maxX = 10; // px
+        const maxY = 8;
+        const tx = clamp((dx / rect.width) * 40, -maxX, maxX);
+        const ty = clamp((dy / rect.height) * 30, -maxY, maxY);
+
+        if(pupilL) { pupilL.setAttribute('cx', tx * 0.9); pupilL.setAttribute('cy', ty * 0.8); }
+        if(pupilR) { pupilR.setAttribute('cx', tx * 0.9); pupilR.setAttribute('cy', ty * 0.8); }
+
+        // tilt the whole robot slightly
+        robotWrap.style.transform = `rotate(${mapRange(tx,-maxX,maxX,-6,6)}deg)`;
+      });
+
+      // ---- random blink ----
+      function blink(){
+        const eyeEls = document.querySelectorAll('#robotWrap #eyes ellipse, #robotWrap #eyes .eye-white, #robotWrap #eyes ellipse');
+        // animate the white ellipses (scaleY)
+        const ellipses = document.querySelectorAll('#robotWrap #eyes ellipse');
+        ellipses.forEach(el=>{
+          el.animate([{ transform: 'scaleY(1)' }, { transform: 'scaleY(0.02)', offset:0.95 }, { transform: 'scaleY(1)' }], { duration: 260, easing: 'ease-in-out' });
+        });
+      }
+      setInterval(()=>{ if(Math.random()>0.25) blink(); }, 3500 + Math.random()*2000);
+
+      // ---- typing reactions (nod/blush/antenna glow) ----
+      function doNod(){ robotWrap.classList.add('robot-nod'); if(blushL) blushL.setAttribute('opacity',0.9); if(blushR) blushR.setAttribute('opacity',0.9); setTimeout(()=>{ robotWrap.classList.remove('robot-nod'); if(blushL) blushL.setAttribute('opacity',0); if(blushR) blushR.setAttribute('opacity',0); }, 800); }
+
+      // react to username typing -> smile slightly
+      if(usernameInput){
+        usernameInput.addEventListener('input', ()=> {
+          // small smile scale animation on path (simulate)
+          smile.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-4px)' }, { transform: 'translateY(0)' }], { duration: 420, easing: 'ease-out' });
+        });
+      }
+
+      // email focus -> antenna glow
+      if(emailInput){
+        emailInput.addEventListener('focus', ()=> {
+          if(antennaTip) antennaTip.classList.add('antenna-glow');
+        });
+        emailInput.addEventListener('blur', ()=> {
+          if(antennaTip) antennaTip.classList.remove('antenna-glow');
+        });
+      }
+
+      // typing in password fields -> nod when typing
+      [pass1Input, pass2Input].forEach(inp=>{
+        if(!inp) return;
+        let typingTimeout;
+        inp.addEventListener('input', ()=>{
+          if(typingTimeout) clearTimeout(typingTimeout);
+          // do a small nod for input
+          doNod();
+          // after typing stops, check match
+          typingTimeout = setTimeout(()=> {
+            validatePasswordsInline();
+          }, 600);
+        });
+      });
+
+      // hover submit -> wave
+      if(submitBtn){
+        submitBtn.addEventListener('mouseenter', ()=> {
+          // add wave to left hand group by toggling transform
+          leftHand && (leftHand.style.transformOrigin = 'top left');
+          // temporarily apply animation class via parent
+          robotWrap.classList.add('robot-wave');
+          setTimeout(()=> robotWrap.classList.remove('robot-wave'), 900);
+        });
+      }
+
+      // ---- Inline validation helpers ----
+      function showError(elem, show=true){
+        if(!elem) return;
+        elem.style.display = show ? 'block' : 'none';
+      }
+
+      function markInputValid(input, valid){
+        if(!input) return;
+        input.classList.remove('input-invalid','input-valid');
+        if(valid) input.classList.add('input-valid');
+        else input.classList.add('input-invalid');
+      }
+
+      function isEmailValid(email){
+        // simple email regex (client-side)
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      }
+
+      function validatePasswordsInline(){
+        const p1 = pass1Input && pass1Input.value.trim();
+        const p2 = pass2Input && pass2Input.value.trim();
+        let ok=true;
+        if(!p1 || p1.length < 8){ showError(errPass,true); markInputValid(pass1Input,false); ok=false; } else { showError(errPass,false); markInputValid(pass1Input,true); }
+        if(!p2){ showError(errPass2,true); markInputValid(pass2Input,false); ok=false; } else { showError(errPass2,false); }
+        if(p1 && p2 && p1 === p2){ markInputValid(pass2Input,true); showError(errPass2,false); // successful match -> small nod + green
+            robotWrap.classList.add('robot-nod'); setTimeout(()=> robotWrap.classList.remove('robot-nod'),700);
+        } else if(p1 && p2 && p1 !== p2){ markInputValid(pass2Input,false); showError(errPass2,true); ok=false; }
+        return ok;
+      }
+
+      // profile validation
+      function validateProfileInline(){
+        if(!profileInput) return true;
+        if(profileInput.files && profileInput.files.length){
+          const f = profileInput.files[0];
+          const maxBytes = 2 * 1024 * 1024; // 2MB
+          const okType = /^image\//.test(f.type);
+          if(!okType || f.size > maxBytes){
+            showError(errProfile,true); markInputValid(profileInput,false);
+            return false;
+          } else {
+            showError(errProfile,false); markInputValid(profileInput,true); return true;
+          }
+        }
+        // no file => ok
+        showError(errProfile,false); markInputValid(profileInput,true); return true;
+      }
+
+      // main form validation before submit
+      function validateAll(){
+        let valid = true;
+        const uname = usernameInput && usernameInput.value.trim();
+        const email = emailInput && emailInput.value.trim();
+
+        if(!uname){ showError(errUsername,true); markInputValid(usernameInput,false); valid=false; } else { showError(errUsername,false); markInputValid(usernameInput,true); }
+        if(!email || !isEmailValid(email)){ showError(errEmail,true); markInputValid(emailInput,false); valid=false; } else { showError(errEmail,false); markInputValid(emailInput,true); }
+
+        const passok = validatePasswordsInline();
+        const profok = validateProfileInline();
+
+        if(!passok || !profok) valid=false;
+        return valid;
+      }
+
+      // attach blur events to run inline validation
+      usernameInput && usernameInput.addEventListener('blur', ()=>{ if(usernameInput.value.trim()) { showError(errUsername,false); markInputValid(usernameInput,true); } });
+      emailInput && emailInput.addEventListener('blur', ()=>{ if(isEmailValid(emailInput.value.trim())) { showError(errEmail,false); markInputValid(emailInput,true); } });
+      profileInput && profileInput.addEventListener('change', validateProfileInline);
+
+      // intercept submit and validate
+      form && form.addEventListener('submit', (e)=>{
+        if(!validateAll()){
+          e.preventDefault();
+          // robot concerned animation when invalid
+          smile && smile.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(6px)' }, { transform: 'translateY(0)' }], { duration: 700, easing:'ease-in-out' });
+          // small shaker effect on card
+          const card = document.querySelector('.glass-card');
+          card && card.animate([{ transform:'translateX(0)' }, { transform:'translateX(-8px)' }, { transform:'translateX(0)' }, { transform:'translateX(8px)' }, { transform:'translateX(0)' }], { duration:420 });
+          return false;
+        }
+        // allow submit — add a little wave & welcome
+        robotWrap.classList.add('robot-wave');
+        setTimeout(()=> robotWrap.classList.remove('robot-wave'),900);
+        return true;
+      });
+
+      // small accessibility / initial states: hide all field-error
+      [errUsername, errEmail, errProfile, errPass, errPass2].forEach(el=> el && (el.style.display='none'));
+
+      // random initial blink on load
+      window.addEventListener('load', ()=>{ setTimeout(()=> blink(), 300); });
+    })();
+  </script>
+</body>
+</html>
