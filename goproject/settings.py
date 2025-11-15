@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-qljwo*&70k!28c^#y22gfve_vjvh4w!8kr3zm&=k^pvy%3iu_g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['goservice-com.onrender.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
